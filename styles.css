@@ -1,0 +1,550 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Noto Sans TC', sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    color: #333;
+}
+
+.container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+header {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-radius: 15px;
+    padding: 25px;
+    margin-bottom: 25px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+    text-align: center;
+    color: #2c3e50;
+    font-weight: 700;
+    font-size: 2.2rem;
+    margin-bottom: 20px;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.view-controls {
+    display: flex;
+    gap: 10px;
+}
+
+.view-btn {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 25px;
+    background: #ecf0f1;
+    color: #7f8c8d;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 14px;
+}
+
+.view-btn.active {
+    background: #3498db;
+    color: white;
+    box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
+}
+
+.view-btn:hover:not(.active) {
+    background: #bdc3c7;
+    transform: translateY(-2px);
+}
+
+.date-controls {
+    display: flex;
+    gap: 10px;
+}
+
+select {
+    padding: 10px 15px;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    background: white;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+select:focus {
+    outline: none;
+    border-color: #3498db;
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+}
+
+.view-container {
+    display: none;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-radius: 15px;
+    padding: 25px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    overflow-x: auto;
+}
+
+.view-container.active {
+    display: block;
+}
+
+/* 月檢視樣式 */
+.calendar-header {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 1px;
+    background: #ecf0f1;
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 1px;
+}
+
+.day-header {
+    background: #34495e;
+    color: white;
+    padding: 15px 10px;
+    text-align: center;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 1px;
+    background: #ecf0f1;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.calendar-day {
+    background: white;
+    min-height: 120px;
+    padding: 10px;
+    position: relative;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.calendar-day:hover {
+    background: #f8f9fa;
+    transform: scale(1.02);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.calendar-day.empty {
+    background: #f8f9fa;
+    cursor: default;
+}
+
+.calendar-day.empty:hover {
+    transform: none;
+    box-shadow: none;
+}
+
+.calendar-day.thursday {
+    background: #ecf0f1;
+    color: #7f8c8d;
+}
+
+.calendar-day.thursday:hover {
+    background: #ecf0f1;
+    transform: none;
+    box-shadow: none;
+}
+
+.date-number {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    font-size: 12px;
+    color: #7f8c8d;
+    font-weight: 500;
+}
+
+.day-content {
+    margin-top: 25px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.shift-tag {
+    padding: 6px 10px;
+    border-radius: 15px;
+    font-size: 12px;
+    font-weight: 500;
+    text-align: center;
+    cursor: grab;
+    transition: all 0.3s ease;
+    position: relative;
+    word-break: break-word;
+}
+
+.shift-tag:active {
+    cursor: grabbing;
+}
+
+.shift-tag.huang {
+    background: #87CEEB;
+    color: #2c3e50;
+}
+
+.shift-tag.yang {
+    background: #4CAF50;
+    color: #fff;
+}
+
+.shift-tag.deputy {
+    background: #FFB6C1;
+    color: #2c3e50;
+}
+
+.shift-tag.leave {
+    background: #FFA07A;
+    color: white;
+}
+
+.leave-btn {
+    position: absolute;
+    bottom: 5px;
+    left: 5px;
+    padding: 4px 8px;
+    background: #e74c3c;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 10px;
+    cursor: pointer;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.calendar-day:hover .leave-btn {
+    opacity: 1;
+}
+
+.leave-btn:hover {
+    background: #c0392b;
+}
+
+.meeting-note {
+    font-size: 10px;
+    color: rgba(255, 255, 255, 0.8);
+    background: rgba(255, 255, 255, 0.3);
+    padding: 2px 6px;
+    border-radius: 8px;
+    margin-top: 3px;
+    text-align: center;
+}
+
+/* 週檢視樣式 */
+.week-header {
+    display: grid;
+    grid-template-columns: 120px repeat(7, 1fr);
+    gap: 1px;
+    background: #ecf0f1;
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 1px;
+}
+
+.person-header {
+    background: #34495e;
+    color: white;
+    padding: 15px 10px;
+    text-align: center;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.week-grid {
+    display: grid;
+    grid-template-columns: 120px repeat(7, 1fr);
+    gap: 1px;
+    background: #ecf0f1;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.week-date-header, .week-row {
+    display: contents;
+}
+
+.week-person {
+    background: #34495e;
+    color: #fff;
+    padding: 20px 10px;
+    text-align: center;
+    font-weight: 600;
+    font-size: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-right: 2px solid #e0e0e0;
+    border-radius: 10px 0 0 10px;
+    min-height: 70px;
+}
+
+.week-day {
+    background: #fff;
+    min-height: 70px;
+    padding: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    border-right: 1px solid #e0e0e0;
+    border-bottom: 1px solid #e0e0e0;
+    border-radius: 0;
+}
+
+.week-row .week-day:first-child {
+    border-radius: 0 0 0 10px;
+}
+.week-row .week-day:last-child {
+    border-radius: 0 0 10px 0;
+    border-right: none;
+}
+
+.week-day:hover {
+    background: #f8f9fa;
+    box-shadow: 0 4px 15px rgba(52, 152, 219, 0.08);
+    z-index: 2;
+}
+
+.week-day.empty {
+    background: #f8f9fa;
+    cursor: default;
+    border-right: 1px solid #e0e0e0;
+}
+
+.week-day.thursday {
+    background: #ecf0f1;
+    color: #7f8c8d;
+    border-right: 1px solid #e0e0e0;
+}
+
+.week-shift-tag {
+    padding: 12px 20px;
+    border-radius: 20px;
+    font-size: 16px;
+    font-weight: 600;
+    text-align: center;
+    cursor: grab;
+    transition: all 0.3s ease;
+    min-width: 80px;
+}
+
+.week-shift-tag:active {
+    cursor: grabbing;
+}
+
+.week-shift-tag.huang {
+    background: #87CEEB;
+    color: #2c3e50;
+}
+
+.week-shift-tag.yang {
+    background: #4CAF50;
+    color: #fff;
+}
+
+.week-shift-tag.deputy {
+    background: #FFB6C1;
+    color: #2c3e50;
+}
+
+.week-shift-tag.leave {
+    background: #FFA07A;
+    color: white;
+}
+
+.week-leave-btn {
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+    padding: 6px 10px;
+    background: #e74c3c;
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 11px;
+    cursor: pointer;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.week-day:hover .week-leave-btn {
+    opacity: 1;
+}
+
+.week-leave-btn:hover {
+    background: #c0392b;
+}
+
+/* 拖曳效果 */
+.shift-tag.dragging,
+.week-shift-tag.dragging {
+    opacity: 0.5;
+    transform: rotate(5deg);
+}
+
+.drop-zone {
+    background: rgba(52, 152, 219, 0.1) !important;
+    border: 2px dashed #3498db;
+}
+
+.drop-zone.invalid {
+    background: rgba(231, 76, 60, 0.1) !important;
+    border: 2px dashed #e74c3c;
+}
+
+/* 通知樣式 */
+.notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 15px 25px;
+    border-radius: 10px;
+    color: white;
+    font-weight: 500;
+    z-index: 1000;
+    transform: translateX(400px);
+    transition: transform 0.3s ease;
+}
+
+.notification.show {
+    transform: translateX(0);
+}
+
+.notification.success {
+    background: #27ae60;
+}
+
+.notification.error {
+    background: #e74c3c;
+}
+
+.notification.warning {
+    background: #f39c12;
+}
+
+/* 響應式設計 */
+@media (max-width: 768px) {
+    .container {
+        padding: 10px;
+    }
+    
+    header {
+        padding: 15px;
+    }
+    
+    h1 {
+        font-size: 1.8rem;
+    }
+    
+    .controls {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .view-controls {
+        justify-content: center;
+    }
+    
+    .date-controls {
+        justify-content: center;
+    }
+    
+    .view-container {
+        padding: 15px;
+        overflow-x: auto;
+    }
+    
+    .calendar-day {
+        min-height: 100px;
+        padding: 8px;
+    }
+    
+    .shift-tag {
+        font-size: 11px;
+        padding: 4px 8px;
+    }
+    
+    .week-day {
+        min-height: 60px;
+        padding: 10px;
+    }
+    
+    .week-shift-tag {
+        font-size: 14px;
+        padding: 8px 15px;
+        min-width: 60px;
+    }
+    
+    .notification {
+        top: 10px;
+        right: 10px;
+        left: 10px;
+        transform: translateY(-100px);
+    }
+    
+    .notification.show {
+        transform: translateY(0);
+    }
+}
+
+@media (max-width: 480px) {
+    .calendar-day {
+        min-height: 80px;
+        padding: 5px;
+    }
+    
+    .shift-tag {
+        font-size: 10px;
+        padding: 3px 6px;
+    }
+    
+    .week-day {
+        min-height: 50px;
+        padding: 8px;
+    }
+    
+    .week-shift-tag {
+        font-size: 12px;
+        padding: 6px 12px;
+        min-width: 50px;
+    }
+}
+
+.day-date {
+    background: #f8f9fa;
+    color: #7f8c8d;
+    padding: 8px 0;
+    text-align: center;
+    font-size: 13px;
+    font-weight: 500;
+    border-bottom: 1px solid #e0e0e0;
+} 
